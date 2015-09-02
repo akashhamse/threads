@@ -1,0 +1,70 @@
+class A{
+	int no;
+	boolean val=false;
+	
+	synchronized int get(){
+		while(!val)
+			try{
+				wait();
+			}catch(InterruptedException e){
+				System.out.println("dead");
+			}
+		
+		System.out.println("get" + no);
+		val=true;
+		notify();
+		return no;
+	}
+
+	synchronized void set(int i){
+		while(val)
+			try{
+				wait();
+			}
+			catch(InterruptedException e){
+				System.out.println("dead");
+			}
+		no=i;
+		val=true;
+		System.out.println("set" + no);
+		notify();
+		
+	}
+}
+
+
+class Producer implements Runnable {
+	A a;
+	Producer(A a){
+		this.a=a;
+		new Thread(this,"producer").start();
+	}
+	public void run(){
+		int i=0;
+		for(int r=0 ;r<3;r++){
+		a.set(i++);
+		}
+	}
+	
+}
+class Customer implements Runnable{
+	A a;
+	Customer(A a){
+		this.a=a;
+		new Thread(this,"customer").start();
+	}
+	public void run(){
+		for(int t=0;t<3;t++){
+		a.get();
+	}
+	
+	}
+	
+}
+class B{
+	public static void main(String args[]){
+	A a= new A();
+	new Producer(a);
+	new Customer(a);
+}
+}
