@@ -1,0 +1,44 @@
+class A{
+	private boolean val=false;
+	public void setVal(boolean val){
+		this.val=val;
+	}
+	public boolean getVal(){
+		return val;
+	}
+}
+class B extends Thread{
+	A a=new A();
+	public void run(){
+		System.out.println("1st fun "+ a.getVal());
+		if(a.getVal()==true){
+			System.out.println("exe 1");
+		}
+	}
+}
+
+class C extends Thread{
+	A a=new A();
+	public void run(){
+		System.out.println("2 fun "+ a.getVal());
+		if(a.getVal()==true){
+			System.out.println("exe 2");
+		}
+	}
+}
+
+class D extends Thread{
+	public static void main(String args[]){
+	A a=new A();
+	B b=new B();
+	C c=new C();
+	Thread t1,t2,t3;
+	t1=new Thread(b,"akash");
+	t2= new Thread(c,"hamse");
+	a.setVal(true);
+	System.out.println("start");
+	t1.start();
+	t2.start();
+	System.out.println("end");
+	}
+}
